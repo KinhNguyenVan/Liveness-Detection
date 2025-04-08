@@ -1,0 +1,6 @@
+checkpoint/*.pt
+dataset/dev/normal/*.jpg
+dataset/dev/spoof/*.jpg
+dataset/train/normal/*.jpg
+dataset/train/spoof/*.jpg
+venv/
