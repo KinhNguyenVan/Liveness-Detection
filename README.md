@@ -41,7 +41,7 @@ This section guides you through the steps to run the code, including downloading
 
 The image datasets for training and validation are organized into `normal` (real images) and `spoof` (fake/attack) images` categories within the `dataset/train/` and `dataset/dev/` directories, respectively. You can download the datasets using the following links:
 
-* **Link download**:[Here] (https://drive.google.com/file/d/14mQyIzvBOPIXippMtx7tNMxoMejjkkrg/view?usp=drive_link)
+* **Link download**: [Here](https://drive.google.com/file/d/14mQyIzvBOPIXippMtx7tNMxoMejjkkrg/view?usp=drive_link)
 
 * **`dataset/`**: Contains the data for training and validation processes.
     * **`dev/`**: Directory containing validation data.
@@ -58,10 +58,10 @@ Please download these datasets and place the image files in the corresponding di
 
 Pre-trained model checkpoints can be downloaded using the links below. These checkpoints can be used for inference, fine-tuning, or as a starting point for training.
 
-* **Dino LORA Checkpoint (`checkpoint/model_dino_lora.pt`)**: [https://drive.google.com/file/d/1awBvFExD4udTpYpjqcLPUOsXaT1XvZjn/view?usp=drive_link]
-* **Dino Transfer Learning Checkpoint (`checkpoint/model_dino_transfer.pt`)**: [https://drive.google.com/file/d/1HHRB1orugyQKBYFJuUve3Yp-n-U9F2WZ/view?usp=drive_link]
-* **ViT LORA Checkpoint (`checkpoint/model_vit_lora.pt`)**: [https://drive.google.com/file/d/13bt65I7mPeF2fkg8SZnEzK3DbuslsUlx/view?usp=drive_link]
-* **ViT Transfer Learning Checkpoint (`checkpoint/model_vit_transfer.pt`)**: [https://drive.google.com/file/d/171xELJC96AgyJ-gXOTyxUGRyQ0fPYjmO/view?usp=drive_link]
+* **Dino LORA Checkpoint**:[checkpoint/model_dino_lora.pt](https://drive.google.com/file/d/1awBvFExD4udTpYpjqcLPUOsXaT1XvZjn/view?usp=drive_link)
+* **Dino Transfer Learning Checkpoint**: [checkpoint/model_dino_transfer.pt](https://drive.google.com/file/d/1HHRB1orugyQKBYFJuUve3Yp-n-U9F2WZ/view?usp=drive_link)
+* **ViT LORA Checkpoint**: [checkpoint/model_vit_lora.pt](https://drive.google.com/file/d/13bt65I7mPeF2fkg8SZnEzK3DbuslsUlx/view?usp=drive_link)
+* **ViT Transfer Learning Checkpoint**: [checkpoint/model_vit_transfer.pt](https://drive.google.com/file/d/171xELJC96AgyJ-gXOTyxUGRyQ0fPYjmO/view?usp=drive_link)
 
 After downloading, place these checkpoint files in the `checkpoint/` directory.
 
