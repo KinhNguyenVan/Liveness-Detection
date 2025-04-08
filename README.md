@@ -58,10 +58,10 @@ Please download these datasets and place the image files in the corresponding di
 
 Pre-trained model checkpoints can be downloaded using the links below. These checkpoints can be used for inference, fine-tuning, or as a starting point for training.
 
-* **Dino LORA Checkpoint**:[checkpoint/model_dino_lora.pt](https://drive.google.com/file/d/1awBvFExD4udTpYpjqcLPUOsXaT1XvZjn/view?usp=drive_link)
-* **Dino Transfer Learning Checkpoint**: [checkpoint/model_dino_transfer.pt](https://drive.google.com/file/d/1HHRB1orugyQKBYFJuUve3Yp-n-U9F2WZ/view?usp=drive_link)
-* **ViT LORA Checkpoint**: [checkpoint/model_vit_lora.pt](https://drive.google.com/file/d/13bt65I7mPeF2fkg8SZnEzK3DbuslsUlx/view?usp=drive_link)
-* **ViT Transfer Learning Checkpoint**: [checkpoint/model_vit_transfer.pt](https://drive.google.com/file/d/171xELJC96AgyJ-gXOTyxUGRyQ0fPYjmO/view?usp=drive_link)
+* **Dino LORA Checkpoint**:[checkpoint/model_dino_lora.pt](https://drive.google.com/file/d/11oNMwr4f3dsqzD-a3f0ETFwPafX6F-TZ/view?usp=drive_link)
+* **Dino Transfer Learning Checkpoint**: [checkpoint/model_dino_transfer.pt](https://drive.google.com/file/d/1vOYgg_Ur-fkMNmvQdIQMpoMczUKwKI4m/view?usp=drive_link)
+* **ViT LORA Checkpoint**: [checkpoint/model_vit_lora.pt](https://drive.google.com/file/d/1d-9I8LHrTSR7Qk36MusQqA-ImBSUeKsm/view?usp=drive_link)
+* **ViT Transfer Learning Checkpoint**: [checkpoint/model_vit_transfer.pt](https://drive.google.com/file/d/1pRe3p54RE6IpLdQLbFsI6WltDLHpniWL/view?usp=drive_link)
 
 After downloading, place these checkpoint files in the `checkpoint/` directory.
 
