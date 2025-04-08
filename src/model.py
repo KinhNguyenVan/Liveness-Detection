@@ -4,9 +4,10 @@ from transformers import AutoImageProcessor, AutoModelForImageClassification
 from peft import LoraConfig, get_peft_model
 
 class LivenessModel(nn.Module):
-    def __init__(self, args, modelname: str):
+    def __init__(self, args):
         super(LivenessModel, self).__init__()
-        self.basemodel = AutoModelForImageClassification.from_pretrained(modelname)
+
+        self.basemodel = AutoModelForImageClassification.from_pretrained(args.pretrained)
         self.basemodel.config.num_labels = args.num_classes
         self.basemodel.classifier = nn.Linear(args.projection_dim, args.num_classes, bias=True)
 
@@ -27,6 +28,7 @@ class LivenessModel(nn.Module):
                 param.requires_grad = False
             for param in self.basemodel.classifier.parameters():
                 param.requires_grad = True
+
     def forward(self,inputs):
         outputs = self.basemodel(inputs)
         logits = outputs.logits
@@ -34,8 +36,10 @@ class LivenessModel(nn.Module):
     
 class Processor(nn.Module):
     def __init__(self,modelname:str):
+
         super(Processor,self).__init__()
         self.modelname = modelname
         self.process = AutoImageProcessor.from_pretrained(modelname)
+
     def forward(self,inputs):
         return self.process(inputs,return_tensors="pt")
