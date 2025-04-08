@@ -10,9 +10,6 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 
 
 
-
-
-
 def train(model,trainset,args,criterion,device):
     model.train()
     model.to(device)
@@ -65,38 +62,40 @@ def train(model,trainset,args,criterion,device):
         print("precision: ",precision_score(target.cpu().numpy(), predict.cpu().numpy(), average='macro'))
 
 
-def evaluate_model(model, device, testset,args):
-    model.eval()  
+def evaluate_model(model, device, testset, args):
+    model.eval()
     model.to(device)
-    test_loader = DataLoader(testset, batch_size=args.dev_batch_size, shuffle=False) 
+    test_loader = DataLoader(testset, batch_size=args.dev_batch_size, shuffle=False)
     all_preds = []
-    all_labels = []
-    
+    all_true_labels = []
+    idx2label = {0: "spoof", 1: "normal"}
+    labels = [idx2label[i] for i in sorted(idx2label.keys())]  
+
     with torch.no_grad():
-        for images, labels in test_loader:
-            images, labels = images.to(device), labels.to(device)
+        for images, labels_batch in test_loader:
+            images, labels_batch = images.to(device), labels_batch.to(device)
             images = images.squeeze(1)
             outputs = model(images)
-            
-            preds = torch.argmax(torch.nn.functional.softmax(outputs,dim=-1), dim=1)
-            
+
+            preds = torch.argmax(torch.nn.functional.softmax(outputs, dim=-1), dim=1)
+
             all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
-    
-    accuracy = accuracy_score(all_labels, all_preds)
-    f1_macro = f1_score(all_labels, all_preds, average='macro')
-    recall = recall_score(all_labels, all_preds, average='macro')
-    precision = precision_score(all_labels, all_preds, average='macro')
-    cm = confusion_matrix(all_labels, all_preds)
-    
+            all_true_labels.extend(labels_batch.cpu().numpy())
+
+    accuracy = accuracy_score(all_true_labels, all_preds)
+    f1_macro = f1_score(all_true_labels, all_preds, average='macro')
+    recall = recall_score(all_true_labels, all_preds, average='macro')
+    precision = precision_score(all_true_labels, all_preds, average='macro')
+    cm = confusion_matrix(all_true_labels, all_preds)
+
     print(f"Accuracy: {accuracy:.4f}")
     print(f"F1 Score (Macro): {f1_macro:.4f}")
     print(f"Recall (Macro): {recall:.4f}")
     print(f"Precision (Macro): {precision:.4f}")
 
-
     plt.figure(figsize=(8, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=labels, yticklabels=labels)  
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
     plt.title("Confusion Matrix")

@@ -6,7 +6,7 @@ from peft import LoraConfig, get_peft_model
 class LivenessModel(nn.Module):
     def __init__(self, args):
         super(LivenessModel, self).__init__()
-
+        self.args = args
         self.basemodel = AutoModelForImageClassification.from_pretrained(args.pretrained)
         self.basemodel.config.num_labels = args.num_classes
         self.basemodel.classifier = nn.Linear(args.projection_dim, args.num_classes, bias=True)
@@ -34,12 +34,12 @@ class LivenessModel(nn.Module):
         logits = outputs.logits
         return logits
     
-class Processor(nn.Module):
-    def __init__(self,modelname:str):
+class preprocessor(nn.Module):
+    def __init__(self,args):
 
-        super(Processor,self).__init__()
-        self.modelname = modelname
-        self.process = AutoImageProcessor.from_pretrained(modelname)
+        super(preprocessor,self).__init__()
+        self.modelname = args.pretrained
+        self.process = AutoImageProcessor.from_pretrained(args.pretrained)
 
     def forward(self,inputs):
         return self.process(inputs,return_tensors="pt")
