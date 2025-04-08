@@ -118,3 +118,59 @@ This table provides a summary of the parameters associated with each provided mo
 * **projection_dim:** The dimensionality of the projection layer in the model.
 
 When running the training or evaluation scripts, you might need to specify these parameters to load the correct model configuration corresponding to the checkpoint you intend to use. Please refer to the script's documentation or command-line arguments for details on how to set these parameters.
+
+ ### 5.Inference
+```import torch
+from model import LivenessModel, preprocessor
+from inference import inference
+import os
+
+img_path = "D:/CAKE/dataset/dev/spoof/63_3.jpg"
+device = 'cuda' if torch.cuda.is_available() else 'cpu'  # Determine device (GPU if available)
+checkpoint = torch.load("D:/CAKE/checkpoint1/model_dino_lora.pt",
+                        weights_only=False, # Load only the weights
+                        map_location=torch.device(device))  # Load checkpoint weights
+model = LivenessModel(checkpoint['args'])  # Initialize model on device
+
+processor = preprocessor(model.args)  # Initialize processor with arguments
+
+model.load_state_dict(checkpoint['model_state_dict'])  # Load weights into model
+
+print("Inference: ", inference(model, processor,img_path, device))  # Perform inference on the image
+```
+
+
+### 6. Training 
+
+```from train import train , evaluate_model
+import torch
+from model import LivenessModel
+from dataloader import CustomImageDataset   
+import os
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+data_dir = 'YOUR_DATASET_DIR'  # **Change this to your actual dataset path**  
+train_dir = os.path.join(data_dir, "train")
+dev_dir = os.path.join(data_dir, "dev")
+
+args = set_args()
+args.pretrained = "google/vit-base-patch16-224" # or "facebook/dino-vitbase16-224",...
+args.projection_dim = 768 # depending on the pretrained model you choose
+args.lora = True # or False, depending on your needs
+args.lora_alpha = 32 # or any other value you prefer
+args.lora_r = 64 # or any other value you prefer
+
+model = LivenessModel(args).to(device)
+train_dataset = CustomImageDataset(train_dir,modelname=args.pretrained)
+dev_dataset = CustomImageDataset(dev_dir,modelname=args.pretrained,dev=True)
+
+train(model, device=device, trainset=train_dataset, devset=dev_dataset, args=args)  # Train the model
+evaluate_model(model, device=device, testset=dev_dataset, args=args)  # Evaluate the model
+
+output_dir = "YOUR_OUTPUT_DIR"  # Specify your output directory
+os.makedirs(output_dir, exist_ok=True)  # Create the output directory if it doesn't exist
+torch.save({
+    'args': args,
+    'model_state_dict': model.state_dict()
+}, os.path.join(output_dir, "model.pt"))  # Save the model state dictionary
+```
