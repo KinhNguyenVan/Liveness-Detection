@@ -3,11 +3,11 @@ import torch
 import numpy as np
 from model import LivenessModel, preprocessor
 
-# Load YOLOv5 model for face detection
-face_model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
-face_model.classes = [0]  # Chỉ phát hiện người (class 0 trong COCO dataset)
 
-# Load mô hình DinoV2-based classification
+face_model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+face_model.classes = [0]  
+
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f"Using device: {device}")
 
@@ -18,36 +18,33 @@ try:
     processor = preprocessor(model.args)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.to(device)
-    model.eval()  # Đặt mô hình ở chế độ evaluation
+    model.eval()  
     print("Liveness model loaded successfully")
 except Exception as e:
     print(f"Error loading model: {e}")
     exit(1)
 
-# Debug: In ra cấu trúc của processor để kiểm tra
+
 print("Processor structure:", dir(processor))
 
-# Hàm tiền xử lý khuôn mặt với debug
+
 def preprocess_face(face_img):
     try:
-        # Resize nếu cần thiết
+      
         if face_img.shape[0] < 10 or face_img.shape[1] < 10:
             print("Face too small, dimensions:", face_img.shape)
             return None
             
-        # Debug: In kích thước khuôn mặt
+   
         print(f"Face dimensions: {face_img.shape}")
         
-        # Convert BGR (OpenCV) sang RGB
+       
         face_rgb = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
-        
-        # Thử dùng phương pháp giống code gốc nếu processor không hoạt động đúng
-        # try:
-        # Sử dụng DinoV2 processor
+    
         processed = processor(face_rgb)
         print("Processor output keys:", processed.keys())
         
-        # Kiểm tra nếu 'pixel_values' không có trong kết quả
+       
         if "pixel_values" not in processed:
             raise KeyError("pixel_values not found in processor output")
             
@@ -58,7 +55,7 @@ def preprocess_face(face_img):
         if len(pixel_values.shape) == 4:  # [batch, channels, height, width]
             return pixel_values.to(device)
         else:
-            # Thêm batch dimension nếu cần
+            
             return pixel_values.unsqueeze(0).to(device)
                 
             
@@ -66,7 +63,7 @@ def preprocess_face(face_img):
         print(f"Error in preprocess_face: {e}")
         return None
 
-# Hàm phân loại khuôn mặt với debug
+
 def classify_face(face_img):
     try:
         face_tensor = preprocess_face(face_img)
@@ -76,7 +73,7 @@ def classify_face(face_img):
             
         idx2label = {0: "spoof", 1: "normal"}
         
-        # Debug: In ra shape của tensor
+       
         print(f"Input tensor shape: {face_tensor.shape}")
         
         with torch.no_grad():
@@ -84,15 +81,14 @@ def classify_face(face_img):
                 output = model(face_tensor)
                 print(f"Model output: {output}, shape: {output.shape}")
                 
-                # Kiểm tra loại output
+             
                 if isinstance(output, dict) and "logits" in output:
                     scores = torch.nn.functional.softmax(output["logits"], dim=-1)
                 else:
                     scores = torch.nn.functional.softmax(output, dim=-1)
                 
                 print(f"Softmax scores: {scores}")
-                
-                # Lấy lớp dự đoán và độ tin cậy
+          
                 predicted_class = torch.argmax(scores, dim=-1).item()
                 confidence = scores[0][predicted_class].item()
                 
@@ -128,7 +124,7 @@ while True:
     # Phát hiện khuôn mặt sử dụng YOLOv5
     results = face_model(frame)
     
-    # Hiển thị FPS
+  
     fps = cap.get(cv2.CAP_PROP_FPS)
     cv2.putText(display_frame, f"FPS: {fps:.2f}", (10, 30), 
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
@@ -148,7 +144,7 @@ while True:
             face_roi = frame[y1:y2, x1:x2]
             
             if face_roi.size > 0:
-                # Phân loại khuôn mặt là 'spoof' hoặc 'normal'
+            
                 classification, confidence = classify_face(face_roi)
                 
                 # Vẽ bounding box và nhãn phân loại
@@ -166,8 +162,7 @@ while True:
                              (x1 + text_size[0], y1), color, -1)
                 cv2.putText(display_frame, label, (x1, y1 - 5), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-    
-    # Hiển thị frame
+   
     cv2.imshow("Face Liveness Detection", display_frame)
     
     # Thoát khi nhấn 'q'
