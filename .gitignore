@@ -4,3 +4,4 @@ dataset/dev/spoof/*.jpg
 dataset/train/normal/*.jpg
 dataset/train/spoof/*.jpg
 venv/
+*.pt
